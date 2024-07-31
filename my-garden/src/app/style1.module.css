@@ -1,0 +1,35 @@
+.ulStyle {
+    display: flex;
+    flex-direction: row;
+    list-style-type: none;
+  }
+.plotStyle {
+    border-radius: 10px;
+    margin: 10px;
+    padding: 10px;
+    background-color: #95A472;
+    color: white;
+    text-align: center;
+}
+.plotH2{
+    text-transform: uppercase;
+    font-size: 2em;
+}
+.plotImg{
+
+}
+.plotLocation{
+    font-style: italic;
+}
+.addPlot{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #95A472;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
