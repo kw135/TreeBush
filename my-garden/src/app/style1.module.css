@@ -16,7 +16,8 @@
     font-size: 2em;
 }
 .plotImg{
-
+    width: 200px;
+    object-fit: cover;
 }
 .plotLocation{
     font-style: italic;
