@@ -9,7 +9,6 @@ export const useDb = () => {
   }
   return context.db;
 };
-
 export const DbContextProvider = ({ children }) => {
   const [db, setDb] = useState(undefined);
 

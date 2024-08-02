@@ -1,48 +1,23 @@
 "use client";
-
 import { useEffect, useState, useContext } from "react";
 import styles from "./style1.module.css";
 import { useRouter } from "next/navigation";
-import { DbContextProvider, useDb } from "./dbContext.js";
+import { useLiveQuery } from "dexie-react-hooks";
+import { dexieDb } from "./db";
 
 export default function MainPage() {
   return (
-    <DbContextProvider>
       <MainPageTemplate />
-    </DbContextProvider>
   );
 }
 
 const MainPageTemplate = () => {
-  const [data, setData] = useState([]);
-  const [isLoading, setLoading] = useState(true);
-  const db = useDb();
-
-  useEffect(() => {
-    if (!db) {
-      return;
-    }
-    const request = db
-      .transaction(["my_garden_os"], "readwrite")
-      .objectStore("my_garden_os");
-    console.log(request);
-    const getAll = request.getAll();
-    getAll.onsuccess = () => {
-      console.log("Data fetched successfully", getAll);
-      setData(getAll.result);
-      setLoading(false);
-    };
-    getAll.onerror = () => {
-      console.error("Error fetching data from db");
-      setLoading(false);
-    };
-  }, [db]);
-  console.log(data);
+  const data = useLiveQuery(() => dexieDb.plots.toArray());
   return (
     <>
-      <h1>Twoje działki</h1>
+      <h1 className={styles.h1}>Twoje działki</h1>
       <ul className={styles.ulStyle}>
-        {data.map((p) => (
+        {data?.map((p) => (
           <Plot
             key={p.id}
             title={p.title}
@@ -59,20 +34,16 @@ const MainPageTemplate = () => {
 
 function Plot({ title, location, img, id }) {
   const router = useRouter();
-  const db = useDb();
 
   const goToPlot = (id) => {
     router.push(`/plot/${id}`);
   };
-
+    
   function removePlot(id) {
-    console.log('ud', id);
-    if (!db) {
+    if (!dexieDb) {
       return;
     }
-    const transaction = db.transaction(["my_garden_os"], "readwrite");
-    const objectStore = transaction.objectStore("my_garden_os");
-    const request = objectStore.delete(id);
+    dexieDb.plots.delete(id)
   }
 
   return (
@@ -80,8 +51,9 @@ function Plot({ title, location, img, id }) {
       <h2 className={styles.plotH2}>{title}</h2>
       <img src={img} alt={title} className={styles.plotImg} />
       <p className={styles.plotLocation}>{location}</p>
-      <div>
+      <div className={styles.divBtn}>
         <button
+        className = {styles.btn}
           onClick={() => {
             goToPlot(id);
           }}
@@ -89,6 +61,7 @@ function Plot({ title, location, img, id }) {
           Wybierz
         </button>
         <button
+          className = {styles.btn}
           onClick={() => {
             removePlot(id);
           }}
@@ -99,17 +72,11 @@ function Plot({ title, location, img, id }) {
     </li>
   );
 }
-
 function AddPlot() {
-  const [plots, setPlots] = useState([]);
-  const db = useDb();
-
-  const addPlot = (plot) => setPlots((p) => [...p, plot]);
-
   return (
     <form
       onSubmit={(e) => {
-        if (!db) {
+        if (!dexieDb) {
           return;
         }
         e.preventDefault();
@@ -117,7 +84,6 @@ function AddPlot() {
         const image = data.getAll("files")[0];
         const title = data.get("title");
         const location = data.get("location");
-        console.log("image", image);
 
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -127,31 +93,32 @@ function AddPlot() {
             location: location,
             img: base64Image,
           };
-          addPlot(newPlot);
-          console.log("newPlot", newPlot);
-          db.transaction(["my_garden_os"], "readwrite")
-            .objectStore("my_garden_os")
-            .add(newPlot);
+          dexieDb.plots.add(newPlot)
           e.target.reset();
         };
         reader.readAsDataURL(image);
       }}
     >
-      <div className={styles.addPlot}>
+      <li className={styles.addPlot}>
         <h2 className={styles.plotH2}>dodaj nową działkę</h2>
         <input
           name="title"
           type="text"
-          placeholder="title"
+          placeholder="Podaj nazwę działki"
+          className={styles.textInp}
         />
         <input
           name="location"
           type="text"
-          placeholder="location"
+          placeholder="Podaj lokalizację działki"
+          className={styles.textInp}
         />
-        <input name="files" type="file" id="uploadImage" />
-        <button type="submit">Add plot</button>
-      </div>
+        <label for="uploadImage" className={styles.fileSelector}>
+          Wybierz zdjęcie
+        </label>
+        <input name="files" type="file" id="uploadImage" className={styles.fileSelector1}/>
+        <button type="submit" className={styles.btn}>Dodaj działkę</button>
+      </li>
     </form>
   );
 }

@@ -2,7 +2,19 @@
     display: flex;
     flex-direction: row;
     list-style-type: none;
+    padding: 0;
+    margin: 0;
   }
+.h1{
+    font-size: 2.5em;
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: 600;
+    background-image: linear-gradient(to left, #265205, #95A472);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+}
 .plotStyle {
     border-radius: 10px;
     margin: 10px;
@@ -10,14 +22,18 @@
     background-color: #95A472;
     color: white;
     text-align: center;
+    max-width: 25%;
+    max-height: 25%;
 }
 .plotH2{
     text-transform: uppercase;
     font-size: 2em;
 }
 .plotImg{
-    width: 200px;
+    width: 80%;
+    height: 70%;
     object-fit: cover;
+    border-radius: 10px;
 }
 .plotLocation{
     font-style: italic;
@@ -27,10 +43,73 @@
     flex-direction: column;
     text-align: center;
     margin: 10px;
-    padding: 10px;
+    padding: 10px 10%;
     border-radius: 10px;
     background-color: #95A472;
     color: white;
     border: none;
+    height: 94%;
+    width: 100%;
+}
+.btn{
+    padding: 10px 20px;
+    background-color: #265205;
+    border-radius: 10px;
+    margin: 5px;
+    color: white;
+    border: none;
     cursor: pointer;
+    font-size: 0.9em;
+}
+.btn:hover{
+    background-color: #052d04;
+    transition: 0.2s;
+}
+.textInp{
+    margin: 5px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+}
+.fileSelector{
+    padding: 10px 20px;
+    background-color: #265205;
+    border-radius: 10px;
+    margin: 5px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+.fileSelector:hover{
+    background-color: #052d04;
+    transition: 0.2s;
+}
+.fileSelector1{
+    display: none;
+}
+.divBtn{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+.divBtn .btn{
+    width: 40%;
+}
+.p1{
+    text-align: center;
+    font-style: italic;
+    color: #95A472;
+}
+.mainImg{
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+    max-width: 1900px;
+    max-height: 800px;
+}
+.mainDiv{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
