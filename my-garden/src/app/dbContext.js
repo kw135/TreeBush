@@ -1,8 +1,17 @@
-import { createContext,useEffect, useState } from "react";
+import { createContext, useEffect, useState, useContext } from "react";
 
+const DbContext = createContext({ db: undefined });
 
-export  const DbContext = () => {
-    const [db, setDb] = useState();
+export const useDb = () => {
+  const context = useContext(DbContext);
+  if (!context) {
+    throw new Error("useDb must be used within a DbContextProvider");
+  }
+  return context.db;
+};
+
+export const DbContextProvider = ({ children }) => {
+  const [db, setDb] = useState(undefined);
 
   useEffect(() => {
     const openRequest = window.indexedDB.open("my_garden_db", 1);
@@ -12,7 +21,7 @@ export  const DbContext = () => {
 
     openRequest.addEventListener("success", () => {
       console.log("Database opened successfully");
-      setDb(openRequest);
+      setDb(openRequest.result);
     });
 
     openRequest.addEventListener("upgradeneeded", (e) => {
@@ -29,4 +38,6 @@ export  const DbContext = () => {
       console.log("Database setup complete");
     });
   }, []);
-}
+
+  return <DbContext.Provider value={{ db }}>{children}</DbContext.Provider>;
+};
